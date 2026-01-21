@@ -3,7 +3,7 @@ import { FileUploadZone } from "@/components/FileUploadZone";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Minimize2, Loader2 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { callFastAPI } from "@/lib/api";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -38,11 +38,7 @@ export function CompressTool() {
       formData.append("file", files[0].file);
       formData.append("level", compressionLevel);
 
-      const { data, error } = await supabase.functions.invoke("compress-pdf", {
-        body: formData,
-      });
-
-      if (error) throw error;
+      const data = await callFastAPI("/compress-pdf", formData);
 
       const blob = new Blob([Uint8Array.from(atob(data.pdf), c => c.charCodeAt(0))], {
         type: "application/pdf",

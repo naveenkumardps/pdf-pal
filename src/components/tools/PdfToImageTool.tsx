@@ -3,7 +3,7 @@ import { FileUploadZone } from "@/components/FileUploadZone";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Image, Loader2 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { callFastAPI } from "@/lib/api";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -32,11 +32,7 @@ export function PdfToImageTool() {
       formData.append("file", files[0].file);
       formData.append("format", format);
 
-      const { data, error } = await supabase.functions.invoke("pdf-to-image", {
-        body: formData,
-      });
-
-      if (error) throw error;
+      const data = await callFastAPI("/pdf-to-image", formData);
 
       // Download the images
       if (data.images && Array.isArray(data.images)) {

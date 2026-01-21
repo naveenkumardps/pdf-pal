@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FileUploadZone } from "@/components/FileUploadZone";
 import { Button } from "@/components/ui/button";
 import { Edit3, Loader2, Type, Pencil, ArrowUpDown, Trash2 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { callFastAPI } from "@/lib/api";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -38,11 +38,7 @@ export function EditTool() {
       formData.append("file", files[0].file);
       formData.append("mode", editMode);
 
-      const { data, error } = await supabase.functions.invoke("edit-pdf", {
-        body: formData,
-      });
-
-      if (error) throw error;
+      const data = await callFastAPI("/edit-pdf", formData);
 
       const blob = new Blob([Uint8Array.from(atob(data.pdf), c => c.charCodeAt(0))], {
         type: "application/pdf",

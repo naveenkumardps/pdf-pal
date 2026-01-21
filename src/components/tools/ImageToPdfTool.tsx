@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FileUploadZone } from "@/components/FileUploadZone";
 import { Button } from "@/components/ui/button";
 import { FileImage, Loader2, GripVertical } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { callFastAPI } from "@/lib/api";
 import { toast } from "sonner";
 
 interface UploadedFile {
@@ -36,11 +36,7 @@ export function ImageToPdfTool() {
         formData.append(`file_${i}`, f.file);
       });
 
-      const { data, error } = await supabase.functions.invoke("image-to-pdf", {
-        body: formData,
-      });
-
-      if (error) throw error;
+      const data = await callFastAPI("/image-to-pdf", formData);
 
       const blob = new Blob([Uint8Array.from(atob(data.pdf), c => c.charCodeAt(0))], {
         type: "application/pdf",

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FileUploadZone } from "@/components/FileUploadZone";
 import { Button } from "@/components/ui/button";
 import { Combine, Loader2, GripVertical, ArrowUpDown } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { callFastAPI } from "@/lib/api";
 import { toast } from "sonner";
 
 interface UploadedFile {
@@ -36,11 +36,7 @@ export function MergeTool() {
         formData.append(`file_${i}`, f.file);
       });
 
-      const { data, error } = await supabase.functions.invoke("merge-pdf", {
-        body: formData,
-      });
-
-      if (error) throw error;
+      const data = await callFastAPI("/merge-pdf", formData);
 
       // Download the merged PDF
       const blob = new Blob([Uint8Array.from(atob(data.pdf), c => c.charCodeAt(0))], {
