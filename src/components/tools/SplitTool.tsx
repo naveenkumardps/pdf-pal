@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Split, Loader2 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { callFastAPI } from "@/lib/api";
 import { toast } from "sonner";
 
 interface UploadedFile {
@@ -30,11 +30,7 @@ export function SplitTool() {
       formData.append("file", files[0].file);
       formData.append("pageRange", pageRange || "all");
 
-      const { data, error } = await supabase.functions.invoke("split-pdf", {
-        body: formData,
-      });
-
-      if (error) throw error;
+      const data = await callFastAPI("/split-pdf", formData);
 
       // Download the split PDF(s)
       if (data.pdfs && Array.isArray(data.pdfs)) {

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FileUploadZone } from "@/components/FileUploadZone";
 import { Button } from "@/components/ui/button";
 import { FileOutput, Loader2 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { callFastAPI } from "@/lib/api";
 import { toast } from "sonner";
 
 interface UploadedFile {
@@ -26,11 +26,7 @@ export function PdfToDocTool() {
       const formData = new FormData();
       formData.append("file", files[0].file);
 
-      const { data, error } = await supabase.functions.invoke("pdf-to-doc", {
-        body: formData,
-      });
-
-      if (error) throw error;
+      const data = await callFastAPI("/pdf-to-doc", formData);
 
       const blob = new Blob([Uint8Array.from(atob(data.doc), c => c.charCodeAt(0))], {
         type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
