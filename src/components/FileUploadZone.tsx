@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Upload, X, FileText, Image as ImageIcon, File } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { PDFPagePreview } from "./PDFPagePreview";
 
 interface UploadedFile {
   id: string;
@@ -17,6 +18,7 @@ interface FileUploadZoneProps {
   onFilesChange: (files: UploadedFile[]) => void;
   title: string;
   description: string;
+  showPDFPreview?: boolean;
 }
 
 export function FileUploadZone({
@@ -27,6 +29,7 @@ export function FileUploadZone({
   onFilesChange,
   title,
   description,
+  showPDFPreview = true,
 }: FileUploadZoneProps) {
   const [isDragOver, setIsDragOver] = useState(false);
 
@@ -158,43 +161,64 @@ export function FileUploadZone({
       </div>
 
       {files.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {files.map((uploadedFile) => {
-            const Icon = getFileIcon(uploadedFile.file);
-            return (
-              <div
-                key={uploadedFile.id}
-                className="flex items-center gap-3 p-3 bg-card rounded-lg border border-border group"
-              >
-                {uploadedFile.preview ? (
-                  <img
-                    src={uploadedFile.preview}
-                    alt=""
-                    className="w-12 h-12 rounded object-cover"
-                  />
-                ) : (
-                  <div className="w-12 h-12 rounded bg-muted flex items-center justify-center">
-                    <Icon className="w-6 h-6 text-primary" />
-                  </div>
-                )}
-                <div className="flex-1 min-w-0">
-                  <p className="font-medium text-sm truncate text-foreground">
-                    {uploadedFile.file.name}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {formatFileSize(uploadedFile.file.size)}
-                  </p>
-                </div>
-                <button
-                  onClick={() => removeFile(uploadedFile.id)}
-                  className="p-1.5 rounded-full hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {files.map((uploadedFile) => {
+              const Icon = getFileIcon(uploadedFile.file);
+              return (
+                <div
+                  key={uploadedFile.id}
+                  className="flex items-center gap-3 p-3 bg-card rounded-lg border border-border group"
                 >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-            );
-          })}
-        </div>
+                  {uploadedFile.preview ? (
+                    <img
+                      src={uploadedFile.preview}
+                      alt=""
+                      className="w-12 h-12 rounded object-cover"
+                    />
+                  ) : (
+                    <div className="w-12 h-12 rounded bg-muted flex items-center justify-center">
+                      <Icon className="w-6 h-6 text-primary" />
+                    </div>
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-sm truncate text-foreground">
+                      {uploadedFile.file.name}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {formatFileSize(uploadedFile.file.size)}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => removeFile(uploadedFile.id)}
+                    className="p-1.5 rounded-full hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* PDF Page Previews */}
+          {showPDFPreview &&
+            files.map((uploadedFile) => {
+              if (uploadedFile.file.type === "application/pdf") {
+                return (
+                  <div
+                    key={`preview-${uploadedFile.id}`}
+                    className="bg-card rounded-xl p-4 border border-border"
+                  >
+                    <p className="text-sm font-medium text-foreground mb-3">
+                      {uploadedFile.file.name}
+                    </p>
+                    <PDFPagePreview file={uploadedFile.file} />
+                  </div>
+                );
+              }
+              return null;
+            })}
+        </>
       )}
     </div>
   );
