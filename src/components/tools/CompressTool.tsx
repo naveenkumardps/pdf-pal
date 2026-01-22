@@ -3,7 +3,7 @@ import { FileUploadZone } from "@/components/FileUploadZone";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Minimize2, Loader2 } from "lucide-react";
-import { callFastAPI } from "@/lib/api";
+import { apiClient, downloadBlob } from "@/lib/api";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -34,31 +34,19 @@ export function CompressTool() {
 
     setIsProcessing(true);
     try {
-      const formData = new FormData();
-      formData.append("file", files[0].file);
-      formData.append("level", compressionLevel);
-
-      const data = await callFastAPI("/compress-pdf", formData);
-
-      const blob = new Blob([Uint8Array.from(atob(data.pdf), c => c.charCodeAt(0))], {
-        type: "application/pdf",
-      });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "compressed.pdf";
-      a.click();
-      URL.revokeObjectURL(url);
-
+      const blob = await apiClient.compressPDF(files[0].file, compressionLevel);
+      
       const originalSize = files[0].file.size;
       const compressedSize = blob.size;
       const reduction = ((1 - compressedSize / originalSize) * 100).toFixed(1);
 
+      downloadBlob(blob, "compressed.pdf");
+      
       toast.success(`PDF compressed! Size reduced by ${reduction}%`);
       setFiles([]);
     } catch (error) {
       console.error("Compress error:", error);
-      toast.error("Failed to compress PDF. Please try again.");
+      toast.error(error instanceof Error ? error.message : "Failed to compress PDF. Please try again.");
     } finally {
       setIsProcessing(false);
     }

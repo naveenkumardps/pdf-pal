@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FileUploadZone } from "@/components/FileUploadZone";
 import { Button } from "@/components/ui/button";
 import { FileImage, Loader2, GripVertical } from "lucide-react";
-import { callFastAPI } from "@/lib/api";
+import { apiClient, downloadBlob } from "@/lib/api";
 import { toast } from "sonner";
 
 interface UploadedFile {
@@ -31,28 +31,16 @@ export function ImageToPdfTool() {
 
     setIsProcessing(true);
     try {
-      const formData = new FormData();
-      files.forEach((f, i) => {
-        formData.append(`file_${i}`, f.file);
-      });
-
-      const data = await callFastAPI("/image-to-pdf", formData);
-
-      const blob = new Blob([Uint8Array.from(atob(data.pdf), c => c.charCodeAt(0))], {
-        type: "application/pdf",
-      });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "images.pdf";
-      a.click();
-      URL.revokeObjectURL(url);
+      const imageFiles = files.map(f => f.file);
+      const blob = await apiClient.imagesToPDF(imageFiles);
+      
+      downloadBlob(blob, "images.pdf");
 
       toast.success("Images converted to PDF successfully!");
       setFiles([]);
     } catch (error) {
       console.error("Convert error:", error);
-      toast.error("Failed to convert images. Please try again.");
+      toast.error(error instanceof Error ? error.message : "Failed to convert images. Please try again.");
     } finally {
       setIsProcessing(false);
     }

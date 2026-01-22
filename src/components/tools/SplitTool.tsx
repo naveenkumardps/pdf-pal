@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Split, Loader2 } from "lucide-react";
-import { callFastAPI } from "@/lib/api";
+import { apiClient, downloadBlob } from "@/lib/api";
 import { toast } from "sonner";
 
 interface UploadedFile {
@@ -26,43 +26,18 @@ export function SplitTool() {
 
     setIsProcessing(true);
     try {
-      const formData = new FormData();
-      formData.append("file", files[0].file);
-      formData.append("pageRange", pageRange || "all");
-
-      const data = await callFastAPI("/split-pdf", formData);
-
-      // Download the split PDF(s)
-      if (data.pdfs && Array.isArray(data.pdfs)) {
-        data.pdfs.forEach((pdfData: string, index: number) => {
-          const blob = new Blob([Uint8Array.from(atob(pdfData), c => c.charCodeAt(0))], {
-            type: "application/pdf",
-          });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = `split_page_${index + 1}.pdf`;
-          a.click();
-          URL.revokeObjectURL(url);
-        });
-      } else {
-        const blob = new Blob([Uint8Array.from(atob(data.pdf), c => c.charCodeAt(0))], {
-          type: "application/pdf",
-        });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "split.pdf";
-        a.click();
-        URL.revokeObjectURL(url);
-      }
+      const blob = await apiClient.splitPDF(files[0].file, pageRange || undefined);
+      
+      // Download the split result (could be a single PDF or a zip of multiple PDFs)
+      const filename = blob.type === "application/zip" ? "split_pages.zip" : "split.pdf";
+      downloadBlob(blob, filename);
 
       toast.success("PDF split successfully!");
       setFiles([]);
       setPageRange("");
     } catch (error) {
       console.error("Split error:", error);
-      toast.error("Failed to split PDF. Please try again.");
+      toast.error(error instanceof Error ? error.message : "Failed to split PDF. Please try again.");
     } finally {
       setIsProcessing(false);
     }

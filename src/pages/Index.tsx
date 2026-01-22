@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { PDFToolbar, ToolType } from "@/components/PDFToolbar";
 import { FeatureBadges } from "@/components/FeatureBadges";
+import { HowItWorks } from "@/components/HowItWorks";
+import { SEOContent } from "@/components/SEOContent";
+import { FAQ } from "@/components/FAQ";
 import { MergeTool } from "@/components/tools/MergeTool";
 import { SplitTool } from "@/components/tools/SplitTool";
 import { CompressTool } from "@/components/tools/CompressTool";
@@ -9,6 +12,7 @@ import { ImageToPdfTool } from "@/components/tools/ImageToPdfTool";
 import { DocToPdfTool } from "@/components/tools/DocToPdfTool";
 import { PdfToDocTool } from "@/components/tools/PdfToDocTool";
 import { EditTool } from "@/components/tools/EditTool";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { FileText } from "lucide-react";
 
 const toolComponents: Record<ToolType, React.ComponentType> = {
@@ -28,7 +32,10 @@ export default function Index() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="gradient-hero text-primary-foreground py-12 md:py-20">
+      <header className="gradient-hero text-primary-foreground py-12 md:py-20 relative">
+        <div className="absolute top-4 right-4 md:top-6 md:right-6">
+          <ThemeToggle />
+        </div>
         <div className="container mx-auto px-4 text-center">
           <div className="flex items-center justify-center gap-3 mb-4">
             <div className="w-12 h-12 rounded-xl bg-primary-foreground/20 flex items-center justify-center">
@@ -60,8 +67,21 @@ export default function Index() {
         </div>
       </section>
 
-      <footer className="py-6 text-center text-muted-foreground text-sm border-t border-border">
-        <p>© 2024 PDF Master. All processing happens securely on our servers.</p>
+      <HowItWorks />
+      
+      <SEOContent />
+      
+      <FAQ />
+
+      <footer className="py-8 text-center text-muted-foreground border-t border-border bg-muted/20">
+        <div className="container mx-auto px-4">
+          <p className="text-sm mb-2">
+            © 2024 PDF Pal. All rights reserved. All processing happens securely in your browser.
+          </p>
+          <p className="text-xs">
+            Free online PDF tools: Merge PDF | Split PDF | Compress PDF | PDF to Image | Image to PDF
+          </p>
+        </div>
       </footer>
     </div>
   );

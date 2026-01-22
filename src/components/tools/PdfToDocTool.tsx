@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { FileUploadZone } from "@/components/FileUploadZone";
 import { Button } from "@/components/ui/button";
-import { FileOutput, Loader2 } from "lucide-react";
-import { callFastAPI } from "@/lib/api";
+import { FileOutput, Loader2, Info } from "lucide-react";
 import { toast } from "sonner";
 
 interface UploadedFile {
@@ -13,7 +12,7 @@ interface UploadedFile {
 
 export function PdfToDocTool() {
   const [files, setFiles] = useState<UploadedFile[]>([]);
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [isProcessing] = useState(false);
 
   const handleConvert = async () => {
     if (files.length === 0) {
@@ -21,31 +20,8 @@ export function PdfToDocTool() {
       return;
     }
 
-    setIsProcessing(true);
-    try {
-      const formData = new FormData();
-      formData.append("file", files[0].file);
-
-      const data = await callFastAPI("/pdf-to-doc", formData);
-
-      const blob = new Blob([Uint8Array.from(atob(data.doc), c => c.charCodeAt(0))], {
-        type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-      });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = files[0].file.name.replace(/\.pdf$/i, ".docx");
-      a.click();
-      URL.revokeObjectURL(url);
-
-      toast.success("PDF converted to DOC successfully!");
-      setFiles([]);
-    } catch (error) {
-      console.error("Convert error:", error);
-      toast.error("Failed to convert PDF. Please try again.");
-    } finally {
-      setIsProcessing(false);
-    }
+    // This feature requires complex OCR/conversion libraries
+    toast.info("PDF to DOC conversion is coming soon! Requires advanced PDF parsing and OCR.");
   };
 
   return (
@@ -55,6 +31,24 @@ export function PdfToDocTool() {
         <p className="text-muted-foreground">
           Convert PDF documents to editable Word format
         </p>
+      </div>
+
+      <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-6 mb-6">
+        <div className="flex items-start gap-3">
+          <Info className="w-5 h-5 text-yellow-500 mt-0.5 flex-shrink-0" />
+          <div className="text-sm text-foreground">
+            <p className="font-semibold mb-1">Coming Soon</p>
+            <p className="text-muted-foreground">
+              PDF to DOC conversion requires advanced OCR and document parsing libraries. 
+              This feature will be available in a future update. For now, you can use:
+            </p>
+            <ul className="list-disc list-inside mt-2 text-muted-foreground space-y-1">
+              <li>Adobe Acrobat's "Export PDF" feature</li>
+              <li>Microsoft Word's "Open PDF" feature</li>
+              <li>Online converters like Smallpdf or Adobe online tools</li>
+            </ul>
+          </div>
+        </div>
       </div>
 
       <FileUploadZone
@@ -82,7 +76,7 @@ export function PdfToDocTool() {
           ) : (
             <>
               <FileOutput className="w-5 h-5 mr-2" />
-              Convert to DOC
+              Convert to DOC (Coming Soon)
             </>
           )}
         </Button>

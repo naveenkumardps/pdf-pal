@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FileUploadZone } from "@/components/FileUploadZone";
 import { Button } from "@/components/ui/button";
 import { Combine, Loader2, GripVertical, ArrowUpDown } from "lucide-react";
-import { callFastAPI } from "@/lib/api";
+import { apiClient, downloadBlob } from "@/lib/api";
 import { toast } from "sonner";
 
 interface UploadedFile {
@@ -31,29 +31,17 @@ export function MergeTool() {
 
     setIsProcessing(true);
     try {
-      const formData = new FormData();
-      files.forEach((f, i) => {
-        formData.append(`file_${i}`, f.file);
-      });
-
-      const data = await callFastAPI("/merge-pdf", formData);
-
+      const pdfFiles = files.map(f => f.file);
+      const blob = await apiClient.mergePDFs(pdfFiles);
+      
       // Download the merged PDF
-      const blob = new Blob([Uint8Array.from(atob(data.pdf), c => c.charCodeAt(0))], {
-        type: "application/pdf",
-      });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "merged.pdf";
-      a.click();
-      URL.revokeObjectURL(url);
+      downloadBlob(blob, "merged.pdf");
 
       toast.success("PDFs merged successfully!");
       setFiles([]);
     } catch (error) {
       console.error("Merge error:", error);
-      toast.error("Failed to merge PDFs. Please try again.");
+      toast.error(error instanceof Error ? error.message : "Failed to merge PDFs. Please try again.");
     } finally {
       setIsProcessing(false);
     }

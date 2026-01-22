@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { FileUploadZone } from "@/components/FileUploadZone";
 import { Button } from "@/components/ui/button";
-import { Edit3, Loader2, Type, Pencil, ArrowUpDown, Trash2 } from "lucide-react";
-import { callFastAPI } from "@/lib/api";
+import { Edit3, Loader2, Type, Pencil, ArrowUpDown, Trash2, Info } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -24,7 +23,7 @@ const editModes: { mode: EditMode; label: string; icon: React.ElementType; descr
 export function EditTool() {
   const [files, setFiles] = useState<UploadedFile[]>([]);
   const [editMode, setEditMode] = useState<EditMode>("text");
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [isProcessing] = useState(false);
 
   const handleEdit = async () => {
     if (files.length === 0) {
@@ -32,32 +31,8 @@ export function EditTool() {
       return;
     }
 
-    setIsProcessing(true);
-    try {
-      const formData = new FormData();
-      formData.append("file", files[0].file);
-      formData.append("mode", editMode);
-
-      const data = await callFastAPI("/edit-pdf", formData);
-
-      const blob = new Blob([Uint8Array.from(atob(data.pdf), c => c.charCodeAt(0))], {
-        type: "application/pdf",
-      });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "edited.pdf";
-      a.click();
-      URL.revokeObjectURL(url);
-
-      toast.success("PDF edited successfully!");
-      setFiles([]);
-    } catch (error) {
-      console.error("Edit error:", error);
-      toast.error("Failed to edit PDF. Please try again.");
-    } finally {
-      setIsProcessing(false);
-    }
+    // This feature requires a complex PDF editing interface
+    toast.info("Interactive PDF editing is coming soon! For now, try using the Split, Rotate, or Merge tools.");
   };
 
   return (
@@ -67,6 +42,27 @@ export function EditTool() {
         <p className="text-muted-foreground">
           Add text, draw, rearrange or delete pages
         </p>
+      </div>
+
+      <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-6 mb-6">
+        <div className="flex items-start gap-3">
+          <Info className="w-5 h-5 text-yellow-500 mt-0.5 flex-shrink-0" />
+          <div className="text-sm text-foreground">
+            <p className="font-semibold mb-1">Coming Soon</p>
+            <p className="text-muted-foreground">
+              Interactive PDF editing with annotations, drawing, and text requires a complex 
+              canvas-based editor. This feature is planned for a future update.
+            </p>
+            <p className="text-muted-foreground mt-2 font-semibold">
+              Available alternatives in PDF Pal:
+            </p>
+            <ul className="list-disc list-inside mt-2 text-muted-foreground space-y-1">
+              <li><strong>Rotate Tool</strong> - Rotate PDF pages</li>
+              <li><strong>Split Tool</strong> - Extract or delete specific pages</li>
+              <li><strong>Merge Tool</strong> - Rearrange pages by merging PDFs in order</li>
+            </ul>
+          </div>
+        </div>
       </div>
 
       <FileUploadZone
@@ -81,7 +77,7 @@ export function EditTool() {
 
       {files.length > 0 && (
         <div className="bg-card rounded-xl p-4 border border-border">
-          <p className="text-sm text-muted-foreground mb-3">Select edit mode:</p>
+          <p className="text-sm text-muted-foreground mb-3">Edit mode preview:</p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {editModes.map((mode) => {
               const Icon = mode.icon;
@@ -121,7 +117,7 @@ export function EditTool() {
           ) : (
             <>
               <Edit3 className="w-5 h-5 mr-2" />
-              Edit PDF
+              Edit PDF (Coming Soon)
             </>
           )}
         </Button>

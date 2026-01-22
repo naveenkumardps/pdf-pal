@@ -2,9 +2,11 @@ import { useEffect, useState, useRef } from "react";
 import * as pdfjsLib from "pdfjs-dist";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+// Import worker file
+import workerUrl from "pdfjs-dist/build/pdf.worker.min.mjs?url";
 
-// Set worker source
-pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+// Set worker source to use local worker file
+pdfjsLib.GlobalWorkerOptions.workerSrc = workerUrl;
 
 interface PagePreview {
   pageNumber: number;

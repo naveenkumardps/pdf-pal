@@ -3,7 +3,7 @@ import { FileUploadZone } from "@/components/FileUploadZone";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Image, Loader2 } from "lucide-react";
-import { callFastAPI } from "@/lib/api";
+import { apiClient, downloadBlob } from "@/lib/api";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -28,32 +28,16 @@ export function PdfToImageTool() {
 
     setIsProcessing(true);
     try {
-      const formData = new FormData();
-      formData.append("file", files[0].file);
-      formData.append("format", format);
-
-      const data = await callFastAPI("/pdf-to-image", formData);
-
-      // Download the images
-      if (data.images && Array.isArray(data.images)) {
-        data.images.forEach((imageData: string, index: number) => {
-          const blob = new Blob([Uint8Array.from(atob(imageData), c => c.charCodeAt(0))], {
-            type: format === "png" ? "image/png" : "image/jpeg",
-          });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = `page_${index + 1}.${format}`;
-          a.click();
-          URL.revokeObjectURL(url);
-        });
-      }
+      const blob = await apiClient.pdfToImages(files[0].file, format, 200);
+      
+      // Download the zip file containing images
+      downloadBlob(blob, "pdf_images.zip");
 
       toast.success("PDF converted to images successfully!");
       setFiles([]);
     } catch (error) {
       console.error("Convert error:", error);
-      toast.error("Failed to convert PDF. Please try again.");
+      toast.error(error instanceof Error ? error.message : "Failed to convert PDF. Please try again.");
     } finally {
       setIsProcessing(false);
     }

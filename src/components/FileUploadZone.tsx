@@ -45,7 +45,7 @@ export function FileUploadZone({
       });
 
       const newFiles: UploadedFile[] = validFiles.map((file) => ({
-        id: crypto.randomUUID(),
+        id: Math.random().toString(36).substr(2, 9),
         file,
         preview: file.type.startsWith("image/")
           ? URL.createObjectURL(file)
@@ -80,7 +80,7 @@ export function FileUploadZone({
       });
 
       const newFiles: UploadedFile[] = validFiles.map((file) => ({
-        id: crypto.randomUUID(),
+        id: Math.random().toString(36).substr(2, 9),
         file,
         preview: file.type.startsWith("image/")
           ? URL.createObjectURL(file)
