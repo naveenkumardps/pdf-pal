@@ -122,6 +122,40 @@ class APIClient {
     return await response.blob();
   }
 
+  async docToPDF(file: File): Promise<Blob> {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await this.makeRequest("/api/doc/to-pdf", "POST", formData);
+    return await response.blob();
+  }
+
+  async pdfToDoc(file: File): Promise<Blob> {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await this.makeRequest("/api/pdf/to-doc", "POST", formData);
+    return await response.blob();
+  }
+
+  async deletePages(file: File, pages: string): Promise<Blob> {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("pages", pages);
+
+    const response = await this.makeRequest("/api/pdf/delete-pages", "POST", formData);
+    return await response.blob();
+  }
+
+  async reorderPages(file: File, order: string): Promise<Blob> {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("order", order);
+
+    const response = await this.makeRequest("/api/pdf/reorder-pages", "POST", formData);
+    return await response.blob();
+  }
+
   async testConnection(): Promise<any> {
     const response = await this.makeRequest("/api/test", "GET");
     return await response.json();

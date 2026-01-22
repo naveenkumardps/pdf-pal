@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { FileUploadZone } from "@/components/FileUploadZone";
 import { Button } from "@/components/ui/button";
-import { FileText, Loader2, Info } from "lucide-react";
+import { FileText, Loader2 } from "lucide-react";
+import { apiClient, downloadBlob } from "@/lib/api";
 import { toast } from "sonner";
 
 interface UploadedFile {
@@ -12,7 +13,7 @@ interface UploadedFile {
 
 export function DocToPdfTool() {
   const [files, setFiles] = useState<UploadedFile[]>([]);
-  const [isProcessing] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const handleConvert = async () => {
     if (files.length === 0) {
@@ -20,8 +21,20 @@ export function DocToPdfTool() {
       return;
     }
 
-    // This feature requires LibreOffice or similar on the backend
-    toast.info("DOC to PDF conversion is coming soon! Requires LibreOffice backend integration.");
+    setIsProcessing(true);
+    try {
+      const blob = await apiClient.docToPDF(files[0].file);
+      
+      downloadBlob(blob, files[0].file.name.replace(/\.(doc|docx)$/i, ".pdf"));
+
+      toast.success("Document converted to PDF successfully!");
+      setFiles([]);
+    } catch (error) {
+      console.error("Convert error:", error);
+      toast.error(error instanceof Error ? error.message : "Failed to convert document. Please try again.");
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   return (
@@ -31,24 +44,6 @@ export function DocToPdfTool() {
         <p className="text-muted-foreground">
           Convert Word documents to PDF format
         </p>
-      </div>
-
-      <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-6 mb-6">
-        <div className="flex items-start gap-3">
-          <Info className="w-5 h-5 text-yellow-500 mt-0.5 flex-shrink-0" />
-          <div className="text-sm text-foreground">
-            <p className="font-semibold mb-1">Coming Soon</p>
-            <p className="text-muted-foreground">
-              DOC/DOCX to PDF conversion requires LibreOffice or similar tools on the backend. 
-              This feature will be available in a future update. For now, you can use:
-            </p>
-            <ul className="list-disc list-inside mt-2 text-muted-foreground space-y-1">
-              <li>Microsoft Word's built-in "Save as PDF" feature</li>
-              <li>Google Docs "Download as PDF" option</li>
-              <li>Online converters like CloudConvert</li>
-            </ul>
-          </div>
-        </div>
       </div>
 
       <FileUploadZone
@@ -76,7 +71,7 @@ export function DocToPdfTool() {
           ) : (
             <>
               <FileText className="w-5 h-5 mr-2" />
-              Convert to PDF (Coming Soon)
+              Convert to PDF
             </>
           )}
         </Button>
