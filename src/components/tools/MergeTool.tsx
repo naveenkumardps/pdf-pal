@@ -2,9 +2,8 @@ import { useState } from "react";
 import { FileUploadZone } from "@/components/FileUploadZone";
 import { Button } from "@/components/ui/button";
 import { Combine, Loader2, GripVertical, ArrowUpDown } from "lucide-react";
-import { apiClient, downloadBlob } from "@/lib/api";
+import { mergePDFs, downloadBlob } from "@/lib/pdf-utils";
 import { toast } from "sonner";
-
 interface UploadedFile {
   id: string;
   file: File;
@@ -32,7 +31,7 @@ export function MergeTool() {
     setIsProcessing(true);
     try {
       const pdfFiles = files.map(f => f.file);
-      const blob = await apiClient.mergePDFs(pdfFiles);
+      const blob = await mergePDFs(pdfFiles);
       
       // Download the merged PDF
       downloadBlob(blob, "merged.pdf");

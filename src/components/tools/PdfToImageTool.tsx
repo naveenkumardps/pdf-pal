@@ -3,7 +3,7 @@ import { FileUploadZone } from "@/components/FileUploadZone";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Image, Loader2 } from "lucide-react";
-import { apiClient, downloadBlob } from "@/lib/api";
+import { pdfToImages, downloadBlob } from "@/lib/pdf-utils";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -28,7 +28,7 @@ export function PdfToImageTool() {
 
     setIsProcessing(true);
     try {
-      const blob = await apiClient.pdfToImages(files[0].file, format, 200);
+      const blob = await pdfToImages(files[0].file, format, 2);
       
       // Download the zip file containing images
       downloadBlob(blob, "pdf_images.zip");

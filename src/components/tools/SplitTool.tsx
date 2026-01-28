@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Split, Loader2 } from "lucide-react";
-import { apiClient, downloadBlob } from "@/lib/api";
+import { splitPDF, downloadBlob } from "@/lib/pdf-utils";
 import { toast } from "sonner";
 
 interface UploadedFile {
@@ -26,7 +26,7 @@ export function SplitTool() {
 
     setIsProcessing(true);
     try {
-      const blob = await apiClient.splitPDF(files[0].file, pageRange || undefined);
+      const blob = await splitPDF(files[0].file, pageRange || undefined);
       
       // Download the split result (could be a single PDF or a zip of multiple PDFs)
       const filename = blob.type === "application/zip" ? "split_pages.zip" : "split.pdf";

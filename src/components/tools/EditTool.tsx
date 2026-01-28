@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Edit3, Loader2, ArrowUpDown, Trash2 } from "lucide-react";
-import { apiClient, downloadBlob } from "@/lib/api";
+import { deletePages, reorderPages, downloadBlob } from "@/lib/pdf-utils";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -43,11 +43,11 @@ export function EditTool() {
       let blob: Blob;
       
       if (editMode === "delete") {
-        blob = await apiClient.deletePages(files[0].file, pageInput);
+        blob = await deletePages(files[0].file, pageInput);
         downloadBlob(blob, "pages_deleted.pdf");
         toast.success("Pages deleted successfully!");
       } else {
-        blob = await apiClient.reorderPages(files[0].file, pageInput);
+        blob = await reorderPages(files[0].file, pageInput);
         downloadBlob(blob, "reordered.pdf");
         toast.success("Pages reordered successfully!");
       }
