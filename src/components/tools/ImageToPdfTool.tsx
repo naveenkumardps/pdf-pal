@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FileUploadZone } from "@/components/FileUploadZone";
 import { Button } from "@/components/ui/button";
 import { FileImage, Loader2, GripVertical } from "lucide-react";
-import { apiClient, downloadBlob } from "@/lib/api";
+import { imagesToPDF, downloadBlob } from "@/lib/pdf-utils";
 import { toast } from "sonner";
 
 interface UploadedFile {
@@ -32,7 +32,7 @@ export function ImageToPdfTool() {
     setIsProcessing(true);
     try {
       const imageFiles = files.map(f => f.file);
-      const blob = await apiClient.imagesToPDF(imageFiles);
+      const blob = await imagesToPDF(imageFiles);
       
       downloadBlob(blob, "images.pdf");
 

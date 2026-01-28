@@ -3,7 +3,7 @@ import { FileUploadZone } from "@/components/FileUploadZone";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Minimize2, Loader2 } from "lucide-react";
-import { apiClient, downloadBlob } from "@/lib/api";
+import { compressPDF, downloadBlob } from "@/lib/pdf-utils";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -34,7 +34,7 @@ export function CompressTool() {
 
     setIsProcessing(true);
     try {
-      const blob = await apiClient.compressPDF(files[0].file, compressionLevel);
+      const blob = await compressPDF(files[0].file, compressionLevel);
       
       const originalSize = files[0].file.size;
       const compressedSize = blob.size;

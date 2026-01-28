@@ -1,42 +1,6 @@
-import { useState } from "react";
-import { FileUploadZone } from "@/components/FileUploadZone";
-import { Button } from "@/components/ui/button";
-import { FileText, Loader2 } from "lucide-react";
-import { apiClient, downloadBlob } from "@/lib/api";
-import { toast } from "sonner";
-
-interface UploadedFile {
-  id: string;
-  file: File;
-  preview?: string;
-}
+import { AlertCircle } from "lucide-react";
 
 export function DocToPdfTool() {
-  const [files, setFiles] = useState<UploadedFile[]>([]);
-  const [isProcessing, setIsProcessing] = useState(false);
-
-  const handleConvert = async () => {
-    if (files.length === 0) {
-      toast.error("Please upload a DOC/DOCX file");
-      return;
-    }
-
-    setIsProcessing(true);
-    try {
-      const blob = await apiClient.docToPDF(files[0].file);
-      
-      downloadBlob(blob, files[0].file.name.replace(/\.(doc|docx)$/i, ".pdf"));
-
-      toast.success("Document converted to PDF successfully!");
-      setFiles([]);
-    } catch (error) {
-      console.error("Convert error:", error);
-      toast.error(error instanceof Error ? error.message : "Failed to convert document. Please try again.");
-    } finally {
-      setIsProcessing(false);
-    }
-  };
-
   return (
     <div className="space-y-6">
       <div className="text-center mb-6">
@@ -46,35 +10,15 @@ export function DocToPdfTool() {
         </p>
       </div>
 
-      <FileUploadZone
-        accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        multiple={false}
-        maxSize={50}
-        files={files}
-        onFilesChange={setFiles}
-        title="Drop DOC/DOCX file here"
-        description="or click to select file"
-      />
-
-      <div className="flex justify-center">
-        <Button
-          onClick={handleConvert}
-          disabled={files.length === 0 || isProcessing}
-          size="lg"
-          className="gradient-primary text-primary-foreground px-8"
-        >
-          {isProcessing ? (
-            <>
-              <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-              Converting...
-            </>
-          ) : (
-            <>
-              <FileText className="w-5 h-5 mr-2" />
-              Convert to PDF
-            </>
-          )}
-        </Button>
+      <div className="bg-muted/50 rounded-xl p-8 border border-border text-center">
+        <AlertCircle className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+        <h3 className="text-lg font-semibold text-foreground mb-2">
+          Feature Not Available
+        </h3>
+        <p className="text-muted-foreground max-w-md mx-auto">
+          DOC to PDF conversion requires server-side processing and is not available in the browser-only version. 
+          Please use Microsoft Word, Google Docs, or LibreOffice to convert your documents to PDF.
+        </p>
       </div>
     </div>
   );
