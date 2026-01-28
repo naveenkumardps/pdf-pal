@@ -20,7 +20,7 @@ export default defineConfig(({ mode }) => ({
   },
   build: {
     target: "es2022", // Support top-level await
-    minify: "terser", // Better minification for production
+    minify: "esbuild", // Use esbuild for faster minification
     cssCodeSplit: true, // Split CSS for better caching
     sourcemap: false, // Disable sourcemaps in production for smaller files
     rollupOptions: {

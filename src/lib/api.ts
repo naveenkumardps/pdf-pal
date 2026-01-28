@@ -1,4 +1,4 @@
-const FASTAPI_URL = import.meta.env.VITE_FASTAPI_URL || "http://localhost:8000";
+const FASTAPI_URL = import.meta.env.VITE_FASTAPI_URL || "";
 
 class APIClient {
   private csrfToken: string | null = null;
