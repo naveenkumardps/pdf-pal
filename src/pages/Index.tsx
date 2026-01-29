@@ -41,7 +41,7 @@ export default function Index() {
             <div className="w-12 h-12 rounded-xl bg-primary-foreground/20 flex items-center justify-center">
               <FileText className="w-7 h-7" />
             </div>
-            <h1 className="text-3xl md:text-5xl font-bold">PDF Master</h1>
+            <h1 className="text-3xl md:text-5xl font-bold">DocFusion</h1>
           </div>
           <p className="text-lg md:text-xl opacity-90 max-w-2xl mx-auto">
             Your all-in-one PDF toolkit. Merge, split, compress, convert, and edit PDFs - all in one place.
@@ -55,11 +55,43 @@ export default function Index() {
         </div>
       </div>
 
-      <main className="container mx-auto px-4 py-8 md:py-12">
-        <div className="max-w-3xl mx-auto">
-          <ActiveToolComponent />
+      <div className="container mx-auto px-4 py-8 md:py-12">
+        <div className="flex gap-6">
+          {/* Main Content */}
+          <main className="flex-1 max-w-3xl mx-auto lg:mx-0">
+            <ActiveToolComponent />
+          </main>
+
+          {/* Ad Side Panel */}
+          <aside className="hidden lg:block w-[300px] shrink-0">
+            <div className="sticky top-20 space-y-4">
+              {/* Ad Slot 1 */}
+              <div className="bg-muted/50 border border-border rounded-lg p-4 min-h-[250px] flex items-center justify-center">
+                <div className="text-center text-muted-foreground">
+                  <p className="text-sm font-medium">Advertisement</p>
+                  <p className="text-xs mt-1">300 x 250</p>
+                  {/* Replace this div with your ad code */}
+                  <div id="ad-slot-1" className="mt-2">
+                    {/* Ad code goes here */}
+                  </div>
+                </div>
+              </div>
+
+              {/* Ad Slot 2 */}
+              <div className="bg-muted/50 border border-border rounded-lg p-4 min-h-[600px] flex items-center justify-center">
+                <div className="text-center text-muted-foreground">
+                  <p className="text-sm font-medium">Advertisement</p>
+                  <p className="text-xs mt-1">300 x 600</p>
+                  {/* Replace this div with your ad code */}
+                  <div id="ad-slot-2" className="mt-2">
+                    {/* Ad code goes here */}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </aside>
         </div>
-      </main>
+      </div>
 
       <section className="py-8 border-t border-border bg-muted/30">
         <div className="container mx-auto px-4">
@@ -76,7 +108,7 @@ export default function Index() {
       <footer className="py-8 text-center text-muted-foreground border-t border-border bg-muted/20">
         <div className="container mx-auto px-4">
           <p className="text-sm mb-2">
-            © 2024 PDF Pal. All rights reserved. All processing happens securely in your browser.
+            © 2024 DocFusion. All rights reserved. All processing happens securely in your browser.
           </p>
           <p className="text-xs">
             Free online PDF tools: Merge PDF | Split PDF | Compress PDF | PDF to Image | Image to PDF
