@@ -8,8 +8,8 @@ import {
 export function FAQ() {
   const faqs = [
     {
-      question: "Is PDF Pal really free to use?",
-      answer: "Yes! PDF Pal is completely free to use with no hidden costs, subscriptions, or premium features. All tools are available to everyone at no charge.",
+      question: "Is DocFusion really free to use?",
+      answer: "Yes! DocFusion is completely free to use with no hidden costs, subscriptions, or premium features. All tools are available to everyone at no charge.",
     },
     {
       question: "Do I need to create an account?",
@@ -24,8 +24,8 @@ export function FAQ() {
       answer: "Most tools support files up to 50MB. For larger files, we recommend splitting them first or using our compression tool to reduce the size.",
     },
     {
-      question: "Can I use PDF Pal on my phone or tablet?",
-      answer: "Yes! PDF Pal works on all devices including smartphones, tablets, and desktop computers. The interface is fully responsive and optimized for mobile use.",
+      question: "Can I use DocFusion on my phone or tablet?",
+      answer: "Yes! DocFusion works on all devices including smartphones, tablets, and desktop computers. The interface is fully responsive and optimized for mobile use.",
     },
     {
       question: "How do I merge multiple PDF files?",
@@ -52,32 +52,32 @@ export function FAQ() {
       answer: "There's no daily limit on the number of files you can process. Use our tools as much as you need, completely free.",
     },
     {
-      question: "Can I use PDF Pal for commercial purposes?",
-      answer: "Yes, you can use PDF Pal for both personal and commercial purposes at no cost.",
+      question: "Can I use DocFusion for commercial purposes?",
+      answer: "Yes, you can use DocFusion for both personal and commercial purposes at no cost.",
     },
   ];
 
   return (
-    <section className="py-16 bg-muted/30">
+    <section className="py-12 md:py-16 bg-muted/30">
       <div className="container mx-auto px-4 max-w-3xl">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-foreground">
+        <h2 className="text-2xl md:text-4xl font-bold text-center mb-4 text-foreground">
           Frequently Asked Questions
         </h2>
-        <p className="text-center text-muted-foreground mb-12">
-          Find answers to common questions about PDF Pal
+        <p className="text-center text-muted-foreground mb-8 md:mb-12 text-sm md:text-base">
+          Find answers to common questions about DocFusion
         </p>
 
-        <Accordion type="single" collapsible className="w-full space-y-4">
+        <Accordion type="single" collapsible className="w-full space-y-3 md:space-y-4">
           {faqs.map((faq, index) => (
             <AccordionItem
               key={index}
               value={`item-${index}`}
-              className="bg-card border border-border rounded-lg px-6"
+              className="bg-card border border-border rounded-lg px-4 md:px-6"
             >
-              <AccordionTrigger className="text-left font-semibold text-foreground hover:no-underline">
+              <AccordionTrigger className="text-left font-semibold text-foreground hover:no-underline text-sm md:text-base py-3 md:py-4">
                 {faq.question}
               </AccordionTrigger>
-              <AccordionContent className="text-muted-foreground leading-relaxed">
+              <AccordionContent className="text-muted-foreground leading-relaxed text-sm md:text-base pb-3 md:pb-4">
                 {faq.answer}
               </AccordionContent>
             </AccordionItem>
@@ -87,4 +87,3 @@ export function FAQ() {
     </section>
   );
 }
-
