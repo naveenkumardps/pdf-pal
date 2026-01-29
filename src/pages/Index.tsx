@@ -62,34 +62,25 @@ export default function Index() {
             <ActiveToolComponent />
           </main>
 
-          {/* Ad Side Panel */}
-          <aside className="hidden lg:block w-[300px] shrink-0">
+          {/* Ad Side Panel - Hidden until ads are configured */}
+          {/* <aside className="hidden lg:block w-[300px] shrink-0">
             <div className="sticky top-20 space-y-4">
-              {/* Ad Slot 1 */}
               <div className="bg-muted/50 border border-border rounded-lg p-4 min-h-[250px] flex items-center justify-center">
                 <div className="text-center text-muted-foreground">
                   <p className="text-sm font-medium">Advertisement</p>
                   <p className="text-xs mt-1">300 x 250</p>
-                  {/* Replace this div with your ad code */}
-                  <div id="ad-slot-1" className="mt-2">
-                    {/* Ad code goes here */}
-                  </div>
+                  <div id="ad-slot-1" className="mt-2"></div>
                 </div>
               </div>
-
-              {/* Ad Slot 2 */}
               <div className="bg-muted/50 border border-border rounded-lg p-4 min-h-[600px] flex items-center justify-center">
                 <div className="text-center text-muted-foreground">
                   <p className="text-sm font-medium">Advertisement</p>
                   <p className="text-xs mt-1">300 x 600</p>
-                  {/* Replace this div with your ad code */}
-                  <div id="ad-slot-2" className="mt-2">
-                    {/* Ad code goes here */}
-                  </div>
+                  <div id="ad-slot-2" className="mt-2"></div>
                 </div>
               </div>
             </div>
-          </aside>
+          </aside> */}
         </div>
       </div>
 
