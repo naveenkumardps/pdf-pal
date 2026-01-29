@@ -1,11 +1,11 @@
 {
-  "name": "PDF Pal - Free Online PDF Tools",
-  "short_name": "PDF Pal",
+  "name": "DocFusion - Free Online PDF Tools",
+  "short_name": "DocFusion",
   "description": "Free online PDF tools to merge, split, compress, and convert PDFs",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#E63482",
+  "theme_color": "#1e88e5",
   "orientation": "portrait-primary",
   "icons": [
     {
@@ -37,4 +37,3 @@
     }
   ]
 }
-

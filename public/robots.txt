@@ -1,4 +1,4 @@
-# robots.txt for PDF Pal
+# robots.txt for DocFusion
 
 # Allow all crawlers
 User-agent: *
@@ -9,7 +9,7 @@ Disallow: /api/
 Disallow: /*.json$
 
 # Sitemap location
-Sitemap: https://yourwebsite.com/sitemap.xml
+Sitemap: https://docfusion.in/sitemap.xml
 
 # Crawl-delay for polite bots
 Crawl-delay: 1
