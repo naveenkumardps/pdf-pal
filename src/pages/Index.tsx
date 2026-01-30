@@ -14,6 +14,8 @@ import { DocToPdfTool } from "@/components/tools/DocToPdfTool";
 import { PdfToDocTool } from "@/components/tools/PdfToDocTool";
 import { EditTool } from "@/components/tools/EditTool";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { CursorGlow } from "@/components/CursorGlow";
+import { useMouseParallax } from "@/hooks/useMouseParallax";
 import { FileText } from "lucide-react";
 
 const toolComponents: Record<ToolType, React.ComponentType> = {
@@ -71,6 +73,7 @@ export default function Index() {
   const [gravityEnabled, setGravityEnabled] = useState(false);
   const animationRef = useRef<number>();
   const containerRef = useRef<HTMLDivElement>(null);
+  const { normalizedX, normalizedY } = useMouseParallax();
 
   const ActiveToolComponent = toolComponents[activeTool];
 
@@ -161,13 +164,15 @@ export default function Index() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden">
+      <CursorGlow />
+      
       <header
         ref={containerRef}
         className="gradient-hero text-primary-foreground py-12 md:py-20 relative overflow-hidden cursor-pointer select-none"
         onClick={handleHeaderClick}
       >
-        {/* Floating particles */}
+        {/* Floating particles with parallax */}
         {particles.map(p => (
           <div
             key={p.id}
@@ -178,7 +183,7 @@ export default function Index() {
               width: p.size,
               height: p.size,
               backgroundColor: p.color,
-              transform: `translate(-50%, -50%)`,
+              transform: `translate(-50%, -50%) translate(${normalizedX * (p.size * 0.3)}px, ${normalizedY * (p.size * 0.3)}px)`,
             }}
           />
         ))}
@@ -186,12 +191,31 @@ export default function Index() {
         <div className="absolute top-4 right-4 md:top-6 md:right-6 z-10">
           <ThemeToggle />
         </div>
-        <div className="container mx-auto px-4 text-center relative z-10">
+        <div 
+          className="container mx-auto px-4 text-center relative z-10"
+          style={{
+            transform: `translate(${normalizedX * 5}px, ${normalizedY * 5}px)`,
+            transition: 'transform 0.1s ease-out',
+          }}
+        >
           <div className="flex items-center justify-center gap-3 mb-4 animate-fade-in">
-            <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl bg-primary-foreground/20 flex items-center justify-center hover-scale">
+            <div 
+              className="w-12 h-12 md:w-14 md:h-14 rounded-xl bg-primary-foreground/20 flex items-center justify-center hover-scale"
+              style={{
+                transform: `rotate(${normalizedX * 5}deg) scale(${1 + Math.abs(normalizedX) * 0.05})`,
+                transition: 'transform 0.15s ease-out',
+              }}
+            >
               <FileText className="w-7 h-7 md:w-8 md:h-8" />
             </div>
-            <h1 className="text-3xl md:text-5xl font-bold hover-scale">DocFusion</h1>
+            <h1 
+              className="text-3xl md:text-5xl font-bold hover-scale"
+              style={{
+                textShadow: `${normalizedX * 3}px ${normalizedY * 3}px 10px hsl(var(--primary) / 0.3)`,
+              }}
+            >
+              DocFusion
+            </h1>
           </div>
           <p className="text-base md:text-xl opacity-90 max-w-2xl mx-auto animate-fade-in px-2">
             Your all-in-one PDF toolkit. Merge, split, compress, convert, and edit PDFs - all in one place.
@@ -209,7 +233,13 @@ export default function Index() {
       </div>
 
       <main className="container mx-auto px-4 py-6 md:py-12">
-        <div className="max-w-3xl mx-auto animate-fade-in">
+        <div 
+          className="max-w-3xl mx-auto animate-fade-in"
+          style={{
+            transform: `perspective(1000px) rotateX(${normalizedY * 1}deg) rotateY(${normalizedX * 1}deg)`,
+            transition: 'transform 0.1s ease-out',
+          }}
+        >
           <ActiveToolComponent />
         </div>
       </main>
