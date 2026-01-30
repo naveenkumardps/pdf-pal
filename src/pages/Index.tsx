@@ -237,6 +237,7 @@ export default function Index() {
             Free online PDF tools: Merge PDF | Split PDF | Compress PDF | PDF to Image | Image to PDF
           </p>
           <div className="mt-4 flex justify-center gap-4 text-xs">
+            <Link to="/about" className="hover:text-foreground transition-colors">About</Link>
             <Link to="/privacy" className="hover:text-foreground transition-colors">Privacy Policy</Link>
             <Link to="/terms" className="hover:text-foreground transition-colors">Terms of Service</Link>
           </div>
